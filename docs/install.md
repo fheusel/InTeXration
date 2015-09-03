@@ -22,7 +22,7 @@ Now clone the InTeXration project.
 ```
 ```bash
 $ cd /home/intexration
-$ git clone https://github.com/JDevlieghere/InTeXration.git
+$ git clone https://github.com/fheusel/InTeXration.git
 ```
 
 ## Prerequisites

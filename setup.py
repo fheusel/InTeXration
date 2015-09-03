@@ -10,7 +10,7 @@ setup(
     packages=['intexration'],
     package_data={'': ['config/*.cfg', 'views/*.tpl', 'static/*/*']},
     include_package_data=True,
-    url='https://github.com/JDevlieghere/InTeXration',
+    url='https://github.com/fheusel/InTeXration',
     license='Apache License, Version 2.0',
     author='Jonas Devlieghere',
     author_email='info@jonasdevlieghere.com',

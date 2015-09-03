@@ -26,17 +26,19 @@ class BuildRequest:
 
     SEPARATOR = '/'
 
-    def __init__(self, owner, repository, commit):
+    def __init__(self, owner, repository, commit, host='github.com', sshuser='git'):
         self.owner = owner
+        self.host = host
+        self.sshuser= sshuser
         self.repository = repository
         self.commit = commit
         self._temp = tempfile.mkdtemp()
 
     def ssh_url(self):
-        return 'git@github.com:'+self.owner+'/'+self.repository+'.git'
+        return self.sshuser+'@'+self.host+':'+self.owner+'/'+self.repository+'.git'
 
     def https_url(self):
-        return 'https://github.com/'+self.owner+'/'+self.repository+'.git'
+        return 'https://'+self.host+'/'+self.owner+'/'+self.repository+'.git'
 
     def __str__(self):
         return self.owner + self.SEPARATOR + self.repository

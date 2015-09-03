@@ -43,3 +43,6 @@ nosetests.xml
 
 # Markdown
 *.html
+
+# OS X
+.DS_Store

@@ -1,15 +1,27 @@
 import logging
 import os
 import json
-from bottle import Bottle, request, abort, static_file, template
+from bottle import Bottle, request, abort, static_file, template, ServerAdapter
 import bottle
 from intexration import constants
 from intexration.build import BuildRequest, Identifier
+import pprint
+
+class SSLCherryPyServer(ServerAdapter):
+    def run(self, handler):
+        from cherrypy import wsgiserver
+        from cherrypy.wsgiserver.ssl_builtin import BuiltinSSLAdapter
+        server = wsgiserver.CherryPyWSGIServer(('0.0.0.0', self.port), handler)
+        server.ssl_adapter = BuiltinSSLAdapter('/etc/apache2/certs/cert.pem', '/etc/apache2/certs/server-pkey.pem',None)
+        try:
+            server.start()
+        finally:
+            server.stop()
 
 
 class Server:
 
-    SERVER = 'cherrypy'
+    SERVER = SSLCherryPyServer
 
     def __init__(self, host, port, handler):
         bottle.TEMPLATE_PATH.insert(0, os.path.join(constants.PATH_MODULE, constants.DIRECTORY_TEMPLATES))
@@ -56,15 +68,35 @@ class RequestHandler:
         if not self.api_manager.is_valid(api_key):
             return self.failure(401, "Hook Request", "Unauthorized: API key invalid.")
         try:
+            pp = pprint.PrettyPrinter(indent=4)
+            postdata = request.body.read()
             payload = request.forms.get('payload')
-            data = json.loads(payload)
-            if 'zen' in data:
-                return self.success('Ping Request')
-            refs = data['ref']
-            owner = data['repository']['owner']['name']
-            repository = data['repository']['name']
-            commit = data['after']
-            build_request = BuildRequest(owner, repository, commit)
+            if not payload:
+                print("payload was none - try another one")
+                payload = json.dumps(request.json)
+                print(payload)
+                data = json.loads(payload)
+                if 'zen' in data:
+                    return self.success('Ping Request')
+                refs = data['ref']
+                owner = data['repository']['git_http_url'].split('/')[3]
+                print(owner)
+                host = data['repository']['git_http_url'].split('/')[2]
+                print(host)
+                sshuser = data['repository']['git_ssh_url'].split('@')[0]
+                print(sshuser)
+                repository = data['repository']['name']
+                commit = data['after']
+                build_request = BuildRequest(owner, repository, commit, host, sshuser)
+            else:
+                data = json.loads(payload)
+                if 'zen' in data:
+                    return self.success('Ping Request')
+                refs = data['ref']
+                owner = data['repository']['owner']['name']
+                repository = data['repository']['name']
+                commit = data['after']
+                build_request = BuildRequest(owner, repository, commit)
             if self._branch in refs:
                 self.build_manager.submit_request(build_request)
                 return self.success("Build Request")

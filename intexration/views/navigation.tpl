@@ -15,7 +15,7 @@
                 <li class="{{doc_link}}"><a href="{{base_url}}">All Documents</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="https://github.com/JDevlieghere/InTeXration" class="active">GitHub</a></li>
+                <li><a href="https://github.com/fheusel/InTeXration" class="active">GitHub</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>

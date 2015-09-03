@@ -1,3 +1,9 @@
+Changes to JDevlieghere's original
+--------
+* understands the gitlab-payload
+* runs with https
+
+
 ![InTeXration](http://cdn.jonasdevlieghere.com/intexration.png)
 
 Features

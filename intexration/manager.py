@@ -78,7 +78,7 @@ class ConfigManager:
         logging.info("Updated config value (%s)", value)
 
     def base_url(self):
-        return 'http://'+self.read('SERVER', 'host')+':'+self.read('SERVER', 'port')+'/'
+        return 'https://'+self.read('SERVER', 'host')+':'+self.read('SERVER', 'port')+'/'
 
     @staticmethod
     def str2bool(v):
